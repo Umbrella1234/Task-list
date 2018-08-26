@@ -88,13 +88,25 @@ export class CreateTaskForm extends React.Component {
 
   handleFileSelect = ({ target: { files, name } }) => {
     const file = files[0];
-    var reader = new FileReader();
+    const reader = new FileReader();
     reader.readAsDataURL(file);
     reader.onloadend = () => {
-      this.setState({
-        imageSrc: reader.result,
-        formData: { ...this.state.formData, [name]: file }
-      });
+      var img = new Image();
+      img.src = reader.result;
+      img.onload = () => {
+        const isImgSizeValid = img.width <= 320 && img.height <= 240;
+        const newState = {
+          imageSrc: isImgSizeValid ? reader.result : "",
+          formData: {
+            ...this.state.formData,
+            [name]: isImgSizeValid ? file : null
+          }
+        };
+        this.setState(newState);
+        if (!isImgSizeValid) {
+          alert("image size should be 320x240 max");
+        }
+      };
     };
   };
 
