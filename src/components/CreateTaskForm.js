@@ -19,13 +19,25 @@ import { Task } from "./Task";
 import { RowWithMargin } from "./styledComponents";
 import { postNewTask } from "../common/api";
 import { REQUEST_STATUSES, COMPLETION_STATUSES } from "../common/constants";
-import { getErrorString, isFilled, validateForm, objToFormData } from "../common/utils";
+import {
+  getErrorString,
+  isFilled,
+  validateForm,
+  objToFormData
+} from "../common/utils";
 
 const initialFormData = {
   email: "",
   text: "",
   username: "",
   image: null
+};
+
+const initialState = {
+  isSubmitting: false,
+  formData: initialFormData,
+  isPreviewShown: false,
+  imageSrc: ""
 };
 
 const validators = {
@@ -36,17 +48,7 @@ const validators = {
 };
 
 export class CreateTaskForm extends React.Component {
-  constructor() {
-    super();
-    this.state = this.getInitialState();
-  }
-
-  getInitialState = () => ({
-    isSubmitting: false,
-    formData: initialFormData,
-    isPreviewShown: false,
-    imageSrc: ""
-  });
+  state = initialState;
 
   closeModal = () => {
     this.props.toggleModal();
@@ -65,7 +67,7 @@ export class CreateTaskForm extends React.Component {
 
     postNewTask(formData).then(({ data: { status, message } }) => {
       if (status === REQUEST_STATUSES.success) {
-        this.setState(this.getInitialState());
+        this.setState(initialState);
         this.props.toggleModal();
         this.props.onTaskAdded();
       } else {
