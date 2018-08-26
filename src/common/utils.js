@@ -16,8 +16,27 @@ export const validateForm = (validators, formData) => {
   return areAllFieldsValid;
 };
 
-export const fixedEncodeURIComponent =  (str) => {
-  return encodeURIComponent(str).replace(/[!'()*]/g, function(c) {
-    return '%' + c.charCodeAt(0).toString(16);
+export const objToFormData = formDataObj => {
+  const formData = new FormData();
+
+  Object.entries(formDataObj).forEach(entry => {
+    const [field, value] = entry;
+    formData.append(field, value);
   });
-}
+
+  return formData;
+};
+
+export const objToParamsString = data => {
+  const entries = Object.entries(data);
+  let paramsString = "";
+
+  entries.forEach((entry, i) => {
+    const [field, value] = entry;
+    const isLastItem = i === entries.length - 1;
+
+    paramsString += `${field}=${value}${isLastItem ? "" : "&"}`;
+  });
+
+  return paramsString;
+};

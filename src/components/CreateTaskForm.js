@@ -19,7 +19,7 @@ import { Task } from "./Task";
 import { RowWithMargin } from "./styledComponents";
 import { postNewTask } from "../common/api";
 import { REQUEST_STATUSES, COMPLETION_STATUSES } from "../common/constants";
-import { getErrorString, isFilled, validateForm } from "../common/utils";
+import { getErrorString, isFilled, validateForm, objToFormData } from "../common/utils";
 
 const initialFormData = {
   email: "",
@@ -61,12 +61,7 @@ export class CreateTaskForm extends React.Component {
   submitFormData = () => {
     this.setState({ isSubmitting: true });
 
-    const formData = new FormData();
-    formData.append("status", COMPLETION_STATUSES.incomplete);
-    Object.entries(this.state.formData).forEach(entry => {
-      const [field, value] = entry;
-      formData.append(field, value);
-    });
+    const formData = objToFormData(this.state.formData);
 
     postNewTask(formData).then(({ data: { status, message } }) => {
       if (status === REQUEST_STATUSES.success) {

@@ -8,7 +8,7 @@ import {
   Form,
   FormGroup,
   Label,
-  Input,
+  Input
 } from "reactstrap";
 import { isEqual } from "lodash";
 import { isFilled, validateForm } from "../common/utils";
@@ -41,11 +41,13 @@ export class LoginForm extends React.Component {
   submitFormData = () => {
     const { formData } = this.state;
     const isAdmin = isEqual(formData, ADMIN_CREDENTIALS);
+
     if (isAdmin) {
       this.props.setAdmin();
       this.props.closeModal();
+      this.setState({ formData: initialFormData });
     } else {
-      alert("no such user!");
+      alert("Incorrect credentials for admin!!");
     }
   };
 
@@ -54,7 +56,7 @@ export class LoginForm extends React.Component {
       formData: { login, password }
     } = this.state;
     const { isOpen, closeModal } = this.props;
-    const isFormValid = validateForm(validators, this.state.formData)
+    const isFormValid = validateForm(validators, this.state.formData);
 
     return (
       <div>

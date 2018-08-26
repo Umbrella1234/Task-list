@@ -4,7 +4,7 @@ import md5 from "md5";
 import styled from "styled-components";
 import { PaginatedList } from "./PaginatedList";
 import { fetchTasks, editTask } from "../common/api";
-import { fixedEncodeURIComponent } from "../common/utils";
+import { objToParamsString, objToFormData } from "../common/utils";
 import { Task } from "./Task";
 import { CreateTaskForm } from "./CreateTaskForm";
 import { LoginForm } from "./LoginForm";
@@ -36,7 +36,6 @@ class App extends Component {
 
   componentDidMount() {
     this.getTasks();
-    this.handleEditTask(5245, { text: "ololo" });
   }
 
   getTasks = (pageToRequest = 1) => {
@@ -74,17 +73,28 @@ class App extends Component {
   };
 
   handleEditTask = (id, data) => {
-    console.log(data);
-    const formData = new FormData();
-    const params = fixedEncodeURIComponent(
-      `status=10&text=SomeText&token=beejee`
-    );
-    const md5Hash = md5(params);
-    formData.append("signature", md5Hash);
-    formData.append("status", "10");
-    formData.append("text", "testingEdit");
-    formData.append("token", "beejee");
-    editTask(formData, 5245, params);
+    const token = "beejee";
+    const paramsString = objToParamsString({ ...data, token });
+    const encodedParams = encodeURI(paramsString);
+    const signature = md5(encodedParams);
+    const formData = objToFormData({
+      ...data,
+      signature,
+      token: "beejee"
+    });
+
+    editTask(formData, id, encodedParams).then(() => {
+      const updatedTasks = this.state.tasks.map(task => {
+        if (task.id === id) {
+          return { ...task, ...data };
+        }
+        return task;
+      });
+
+      this.setState({
+        tasks: updatedTasks
+      });
+    });
   };
 
   toggleCreateForm = () =>
@@ -188,7 +198,7 @@ class App extends Component {
                   />
                 </React.Fragment>
               ) : (
-                <div>You've got no tasks. </div>
+                <div>You've got no tasks.</div>
               )}
             </Col>
           </RowWithMargin>
