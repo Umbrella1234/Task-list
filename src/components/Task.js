@@ -63,7 +63,7 @@ export const Task = ({
             {isAdmin ? (
               <StyledTextarea
                 name="text"
-                rows="5"
+                rows="4"
                 onBlur={e => onEditTask(id, { text: e.target.value })}
                 defaultValue={text}
               />

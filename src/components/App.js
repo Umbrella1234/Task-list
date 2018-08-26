@@ -22,6 +22,13 @@ const NewTaskBtn = styled(Button)`
   margin-left: 10px;
 `;
 
+const AppWrapper = styled.div`
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+`;
+
 class App extends Component {
   state = {
     isAdmin: false,
@@ -146,75 +153,79 @@ class App extends Component {
     const hasTasks = !!tasks.length;
 
     return (
-      <Container>
-        <RowWithMargin>
-          <Col xs={12}>
-            <h1>Tasks:</h1>
-          </Col>
-        </RowWithMargin>
-        <Block isLoading={areTasksLoading}>
-          <RowWithMargin>
-            <Col xs={4}>
-              {hasTasks && (
-                <React.Fragment>
-                  Sort by:{" "}
-                  <select
-                    onChange={this.handleChange}
-                    value={sortField}
-                    name="sortField"
-                  >
-                    <option value="id">id</option>
-                    <option value="username">username</option>
-                    <option value="email">email</option>
-                    <option value="status">status</option>
-                  </select>
-                </React.Fragment>
-              )}
-            </Col>
-            <Col xs={8}>
-              <BtnPanel>
-                <Button
-                  color="primary"
-                  onClick={isAdmin ? this.toggleIsAdmin : this.toggleLoginModal}
-                >
-                  {isAdmin ? "Logout" : "Login"}
-                </Button>
-                <NewTaskBtn onClick={this.toggleCreateForm} color="success">
-                  New task
-                </NewTaskBtn>
-              </BtnPanel>
-            </Col>
-          </RowWithMargin>
+      <AppWrapper>
+        <Container>
           <RowWithMargin>
             <Col xs={12}>
-              {tasks.length ? (
-                <React.Fragment>
-                  <PaginatedList
-                    activePageNumber={activePageNumber}
-                    totalPages={totalPages}
-                    items={tasks}
-                    renderItems={this.renderTasks}
-                    setActivePage={this.setActivePage}
-                  />
-                </React.Fragment>
-              ) : (
-                <div>You've got no tasks.</div>
-              )}
+              <h1>Tasks:</h1>
             </Col>
           </RowWithMargin>
-        </Block>
-        <LoginForm
-          setAdmin={this.toggleIsAdmin}
-          isOpen={isLoginFormOpen}
-          closeModal={this.toggleLoginModal}
-        />
-        <CreateTaskForm
-          toggleModal={this.toggleCreateForm}
-          addTask={this.addTask}
-          isOpen={isCreateFormOpen}
-          onTaskAdded={this.onTaskAdded}
-        />
-      </Container>
+          <Block isLoading={areTasksLoading}>
+            <RowWithMargin>
+              <Col xs={4}>
+                {hasTasks && (
+                  <React.Fragment>
+                    Sort by:{" "}
+                    <select
+                      onChange={this.handleChange}
+                      value={sortField}
+                      name="sortField"
+                    >
+                      <option value="id">id</option>
+                      <option value="username">username</option>
+                      <option value="email">email</option>
+                      <option value="status">status</option>
+                    </select>
+                  </React.Fragment>
+                )}
+              </Col>
+              <Col xs={8}>
+                <BtnPanel>
+                  <Button
+                    color="primary"
+                    onClick={
+                      isAdmin ? this.toggleIsAdmin : this.toggleLoginModal
+                    }
+                  >
+                    {isAdmin ? "Logout" : "Login"}
+                  </Button>
+                  <NewTaskBtn onClick={this.toggleCreateForm} color="success">
+                    New task
+                  </NewTaskBtn>
+                </BtnPanel>
+              </Col>
+            </RowWithMargin>
+            <RowWithMargin>
+              <Col xs={12}>
+                {tasks.length ? (
+                  <React.Fragment>
+                    <PaginatedList
+                      activePageNumber={activePageNumber}
+                      totalPages={totalPages}
+                      items={tasks}
+                      renderItems={this.renderTasks}
+                      setActivePage={this.setActivePage}
+                    />
+                  </React.Fragment>
+                ) : (
+                  <div>You've got no tasks.</div>
+                )}
+              </Col>
+            </RowWithMargin>
+          </Block>
+          <LoginForm
+            setAdmin={this.toggleIsAdmin}
+            isOpen={isLoginFormOpen}
+            closeModal={this.toggleLoginModal}
+          />
+          <CreateTaskForm
+            toggleModal={this.toggleCreateForm}
+            addTask={this.addTask}
+            isOpen={isCreateFormOpen}
+            onTaskAdded={this.onTaskAdded}
+          />
+        </Container>
+      </AppWrapper>
     );
   }
 }
