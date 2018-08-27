@@ -22,13 +22,6 @@ const NewTaskBtn = styled(Button)`
   margin-left: 10px;
 `;
 
-const AppWrapper = styled.div`
-  height: 100vh;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-`;
-
 class App extends Component {
   state = {
     isAdmin: false,
@@ -153,7 +146,6 @@ class App extends Component {
     const hasTasks = !!tasks.length;
 
     return (
-      <AppWrapper>
         <Container>
           <RowWithMargin>
             <Col xs={12}>
@@ -225,7 +217,6 @@ class App extends Component {
             onTaskAdded={this.onTaskAdded}
           />
         </Container>
-      </AppWrapper>
     );
   }
 }
